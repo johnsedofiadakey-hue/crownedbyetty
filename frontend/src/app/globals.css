@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--admin-primary);
+  --color-secondary: var(--admin-secondary);
+  --color-accent: var(--admin-accent);
+  --color-background: var(--admin-background);
+  --color-foreground: var(--admin-foreground);
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-manrope);
+}
+
+:root {
+  /* Vibrant, Luminous Luxury Palette */
+  --admin-primary: #1A3614;
+  /* Deep, rich forest/emerald green */
+  --admin-secondary: #E8F0E4;
+  /* Very soft, airy mint/sage cream */
+  --admin-accent: #D4AF37;
+  /* Glowing Gold */
+  --admin-background: #FDFBF7;
+  /* Warm Pearl / Alabaster White */
+  --admin-foreground: #2C2C2C;
+  /* Soft charcoal for readable text */
+}
+
+body {
+  background-color: var(--admin-background);
+  color: var(--admin-foreground);
+  overflow-x: hidden;
+}
+
+/* Add a beautiful, subtle grain texture to the whole site to make it feel expensive */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--admin-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--admin-accent);
+  border-radius: 10px;
+}
+
+/* =========================================================
+   CUSTOM ANIMATIONS (Hero Section & Interactive Elements)
+   ========================================================= */
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 6s ease infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

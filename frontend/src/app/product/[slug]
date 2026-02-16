@@ -1,0 +1,169 @@
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Navbar from "@/components/Navbar";
+import { Star, ShoppingBag, Heart, Minus, Plus, CheckCircle } from "lucide-react";
+import Image from "next/image";
+
+// === Dummy Data for the single product view ===
+const PRODUCT_DATA = {
+  id: "1",
+  name: "Follicle Awakening Elixir",
+  price: 350,
+  rating: 4.9,
+  reviewCount: 128,
+  description: "A potent, scientifically-formulated serum designed to energize dormant follicles. Infused with biotin, caffeine, and rare botanical extracts, it stimulates circulation and creates the optimal environment for rapid, healthy hair growth.",
+  howToUse: "Apply 3-5 drops directly to the scalp every evening. Massage gently with fingertips for 2 minutes to ensure absorption. Do not rinse. Consistency is key for visible results.",
+  ingredients: "Aqua, Biotin, Caffeine, Rosemary Leaf Oil, Peppermint Oil, Ginseng Root Extract...",
+  images: [
+    "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=1200", // Main Image
+    "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=800", // Alt 1
+    "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800", // Alt 2
+  ],
+  reviews: [
+    { user: "Ama K.", rating: 5, comment: "My edges are finally coming back! Smells divine too." },
+    { user: "Sarah J.", rating: 5, comment: "Saw a difference in thickness after just 3 weeks. Worth every cedi." },
+  ]
+};
+
+export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState("description");
+
+  const handleQuantity = (type: "inc" | "dec") => {
+    if (type === "dec" && quantity > 1) setQuantity(quantity - 1);
+    if (type === "inc") setQuantity(quantity + 1);
+  };
+
+  const tabContent = {
+    description: (
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} className="space-y-6 font-sans text-gray-700 leading-relaxed">
+        <p>{PRODUCT_DATA.description}</p>
+        <div>
+          <h4 className="font-serif text-lg font-bold text-primary mb-2">Key Ingredients</h4>
+          <p className="text-sm">{PRODUCT_DATA.ingredients}</p>
+        </div>
+      </motion.div>
+    ),
+    howToUse: (
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} className="font-sans text-gray-700 leading-relaxed">
+         <h4 className="font-serif text-lg font-bold text-primary mb-4">Ritual Application</h4>
+         <p>{PRODUCT_DATA.howToUse}</p>
+      </motion.div>
+    ),
+    reviews: (
+      <motion.div initial={{opacity:0}} animate={{opacity:1}} className="space-y-8">
+        {PRODUCT_DATA.reviews.map((review, idx) => (
+           <div key={idx} className="border-b border-gray-100 pb-6">
+             <div className="flex items-center justify-between mb-2">
+                <span className="font-bold text-primary">{review.user}</span>
+                <div className="flex text-accent"><Star className="w-4 h-4 fill-current"/> <span className="ml-1 text-sm">{review.rating}.0</span></div>
+             </div>
+             <p className="font-sans text-gray-600">{review.comment}</p>
+           </div>
+        ))}
+      </motion.div>
+    )
+  };
+
+  return (
+    <main className="min-h-screen bg-background overflow-hidden">
+      <Navbar />
+      
+      {/* Vibrant Background Elements */}
+      <div className="fixed inset-0 pointer-events-none">
+          <div className="absolute top-0 right-[-20%] w-[800px] h-[800px] bg-emerald-100/60 rounded-full blur-[180px] -z-10" />
+          <div className="absolute bottom-0 left-[-20%] w-[800px] h-[800px] bg-amber-100/50 rounded-full blur-[180px] -z-10" />
+      </div>
+
+      <section className="relative pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          
+          {/* === LEFT COLUMN: Glassmorphic Image Gallery === */}
+          <motion.div initial={{opacity:0, x:-50}} animate={{opacity:1, x:0}} transition={{duration:0.8}} className="space-y-6">
+             {/* Main Image Container */}
+             <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-white/40 backdrop-blur-xl border border-white/60 shadow-xl p-2">
+                <div className="relative w-full h-full rounded-[2rem] overflow-hidden">
+                  <Image
+                    src={PRODUCT_DATA.images[activeImageIndex]}
+                    alt={PRODUCT_DATA.name}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+             </div>
+             {/* Thumbnails */}
+             <div className="flex space-x-4 overflow-x-auto pb-2">
+                {PRODUCT_DATA.images.map((img, idx) => (
+                  <button key={idx} onClick={() => setActiveImageIndex(idx)} className={`relative w-24 h-24 rounded-2xl overflow-hidden border-2 transition-all ${activeImageIndex === idx ? 'border-accent scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
+                    <Image src={img} alt="thumbnail" fill className="object-cover" />
+                  </button>
+                ))}
+             </div>
+          </motion.div>
+
+          {/* === RIGHT COLUMN: Product Details & Actions === */}
+          <motion.div initial={{opacity:0, x:50}} animate={{opacity:1, x:0}} transition={{duration:0.8, delay:0.2}}>
+             
+             {/* Header Info */}
+             <div className="mb-8">
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="flex text-accent"><Star className="w-5 h-5 fill-current"/></div>
+                  <span className="font-sans font-bold text-primary">{PRODUCT_DATA.rating}</span>
+                  <span className="text-gray-500 text-sm">({PRODUCT_DATA.reviewCount} Reviews)</span>
+                </div>
+                <h1 className="font-serif text-4xl md:text-5xl font-bold text-primary mb-4">{PRODUCT_DATA.name}</h1>
+                <p className="font-sans text-3xl text-accent font-bold">GH₵ {PRODUCT_DATA.price}</p>
+             </div>
+
+             {/* Glassmorphic Tabbed Content */}
+             <div className="bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-8 shadow-sm mb-10">
+                 {/* Tab Toggles */}
+                 <div className="flex space-x-8 border-b border-gray-200/50 pb-4 mb-6">
+                    {['description', 'howToUse', 'reviews'].map((tab) => (
+                      <button key={tab} onClick={() => setActiveTab(tab)} className={`font-sans font-bold text-sm uppercase tracking-wider relative pb-2 transition-colors ${activeTab === tab ? 'text-primary' : 'text-gray-400 hover:text-primary'}`}>
+                         {tab === 'howToUse' ? 'How to Use' : tab}
+                         {activeTab === tab && <motion.div layoutId="tabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent" />}
+                      </button>
+                    ))}
+                 </div>
+                 {/* Tab Body */}
+                 <div className="min-h-[150px]">
+                   <AnimatePresence mode="wait">
+                     {tabContent[activeTab as keyof typeof tabContent]}
+                   </AnimatePresence>
+                 </div>
+             </div>
+
+             {/* Add to Cart Section */}
+             <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-lg border-t border-white lg:relative lg:p-0 lg:bg-transparent lg:border-none z-50">
+                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center gap-6">
+                    {/* Quantity Selector */}
+                    <div className="flex items-center bg-white border border-gray-200 rounded-full px-4 py-3 space-x-6">
+                        <button onClick={() => handleQuantity('dec')} className="text-gray-500 hover:text-primary"><Minus className="w-5 h-5"/></button>
+                        <span className="font-sans font-bold text-lg">{quantity}</span>
+                        <button onClick={() => handleQuantity('inc')} className="text-gray-500 hover:text-primary"><Plus className="w-5 h-5"/></button>
+                    </div>
+                    
+                    {/* Main Action Buttons */}
+                    <div className="flex-1 w-full flex space-x-4">
+                        <button className="flex-1 bg-gradient-to-r from-primary to-[#2C4F22] text-white font-sans font-bold uppercase tracking-wider py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center space-x-2">
+                          <ShoppingBag className="w-5 h-5" />
+                          <span>Add to Cart — GH₵ {PRODUCT_DATA.price * quantity}</span>
+                        </button>
+                        <button className="p-4 border-2 border-gray-200 text-gray-400 rounded-full hover:border-red-400 hover:text-red-500 transition-colors">
+                            <Heart className="w-6 h-6" />
+                        </button>
+                    </div>
+                </div>
+             </div>
+
+          </motion.div>
+        </div>
+      </section>
+    </main>
+  );
+}
