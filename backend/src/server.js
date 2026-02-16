@@ -39,8 +39,8 @@ const settingRoutes = require('./routes/settingRoutes');
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/settings', settingRoutes);
-app.use('/api/reviews', require('../routes/reviewRoutes'));
-app.use('/api/upload', require('../routes/uploadRoutes'));
+app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/upload', require('./routes/uploadRoutes'));
 
 // Serve static files
 const path = require('path');
