@@ -17,9 +17,9 @@ export default function AdminDashboard() {
 
     // --- State Management ---
     const [activeTab, setActiveTab] = useState("orders");
-    const [orders, setOrders] = useState([]);
-    const [inventory, setInventory] = useState([]);
-    const [reviews, setReviews] = useState([]);
+    const [orders, setOrders] = useState<any[]>([]);
+    const [inventory, setInventory] = useState<any[]>([]);
+    const [reviews, setReviews] = useState<any[]>([]);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
     // UI States
