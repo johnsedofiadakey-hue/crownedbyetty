@@ -11,6 +11,10 @@ const settingsSchema = new mongoose.Schema({
         type: String,
         default: 'Crowned By Etty'
     },
+    logoUrl: {
+        type: String,
+        default: ''
+    },
     themeColors: {
         primary: { type: String, default: '#111827' },
         secondary: { type: String, default: '#f3f4f6' },
